@@ -1,0 +1,53 @@
+# Immich Backup Configuration
+# Copy this file to /mnt/user/appdata/immich-backup/immich-backup.conf
+# and edit the values below.
+
+# ─── rclone remote ──────────────────────────────────────────────
+# Name of your rclone remote and bucket (run `rclone config` to set up)
+# Examples: "b2:immich-backup", "wasabi:my-bucket", "s3:my-bucket/immich"
+RCLONE_REMOTE="b2:immich-backup"
+
+# ─── Source directories ─────────────────────────────────────────
+# Where Immich stores photos (the /data mount in your Immich container)
+PHOTOS_DIR="/mnt/user/pictures"
+
+# Where to stage DB dumps locally before uploading
+BACKUP_DIR="/mnt/user/immich-backup"
+
+# ─── Container management ───────────────────────────────────────
+# Set to "true" to stop Immich containers during backup for consistency.
+# "false" = live backup (pg_dump handles DB consistency, photos are static).
+STOP_CONTAINERS="true"
+
+# Container names (change if you renamed them in Unraid)
+CONTAINER_SERVER="immich-server"
+CONTAINER_ML="immich-machine-learning"
+CONTAINER_DB="immich-postgres"
+CONTAINER_REDIS="immich-redis"
+
+# ─── Database ───────────────────────────────────────────────────
+DB_CONTAINER="$CONTAINER_DB"
+DB_USER="postgres"
+DB_NAME="immich"
+
+# Number of local DB dump files to retain
+RETAIN_DUMPS=7
+
+# ─── rclone tuning ──────────────────────────────────────────────
+TRANSFERS=4
+CHECKERS=8
+BUFFER_SIZE="16M"
+BWLIMIT="0"              # e.g. "50M" to limit bandwidth, "0" for unlimited
+
+# Directories to exclude from photo sync (relative to PHOTOS_DIR)
+EXCLUDE_DIRS="immich-gen/**"
+
+# ─── Notifications (optional) ───────────────────────────────────
+# Set to a webhook URL to receive a POST on completion.
+# Works with Discord, Slack, ntfy, Gotify, etc.
+# Leave empty to disable.
+WEBHOOK_URL=""
+
+# ─── Logging ────────────────────────────────────────────────────
+LOG_DIR="${BACKUP_DIR}/logs"
+RETAIN_LOGS=30           # Delete logs older than N days
