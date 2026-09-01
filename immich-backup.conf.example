@@ -51,3 +51,15 @@ WEBHOOK_URL=""
 # ─── Logging ────────────────────────────────────────────────────
 LOG_DIR="${BACKUP_DIR}/logs"
 RETAIN_LOGS=30           # Delete logs older than N days
+
+# ─── iCloud (immich-icloud.sh) ───────────────────────────────────
+# Apple ID for iCloud Photos Downloader (icloudpd)
+# Leave empty to be prompted during setup
+ICLOUD_APPLE_ID=""
+ICLOUD_CONTAINER="icloudpd"
+ICLOUD_DOWNLOAD_DIR="/mnt/user/pictures/iCloud"
+ICLOUD_CONFIG_DIR="/mnt/user/appdata/icloudpd"
+ICLOUD_TIMEZONE="America/New_York"
+ICLOUD_DOWNLOAD_INTERVAL="86400"   # Seconds between syncs (86400 = 24h)
+ICLOUD_PHOTO_SIZE="original"       # original, medium, thumb
+ICLOUD_FOLDER_STRUCTURE="{:%Y/%m/%d}"

@@ -179,6 +179,54 @@ gunzip -c /mnt/user/immich-backup/db-dumps/immich-YYYYMMDD.sql.gz \
 
 Backblaze B2 offers 10 GB free. Egress is free for the first 3x your stored data per day.
 
+## iCloud Integration
+
+The tool includes `immich-icloud.sh` — a wrapper around [icloudpd](https://github.com/boredazfcuk/docker-icloudpd) that pulls your iCloud photo library to Tower. Immich can then import those photos as an external library.
+
+### How it works
+
+```
+Phone → Immich (source of truth, mobile app sync)
+iCloud → icloudpd (pulls to /mnt/user/pictures/iCloud/)
+Both directories → rclone → Backblaze B2 (offsite backup)
+```
+
+### Setup
+
+```bash
+# Install the icloudpd container and authenticate
+immich-icloud.sh setup
+
+# Follow the prompts — you'll need your Apple ID and 2FA code
+# The container stores credentials securely in a keyring
+
+# After auth, photos sync automatically every 24h
+immich-icloud.sh status
+```
+
+### Commands
+
+```bash
+immich-icloud.sh setup    # Install + authenticate
+immich-icloud.sh pull     # Force a one-time sync
+immich-icloud.sh status   # Check photo count + last sync
+immich-icloud.sh logs     # Follow container logs
+immich-icloud.sh reauth   # Re-auth when MFA cookie expires
+```
+
+### iCloud prerequisites
+
+- **Advanced Data Protection** must be **OFF** on your iCloud account (Settings → Apple ID → iCloud → Advanced Data Protection)
+- **Access iCloud Data on the Web** must be **ON** (Settings → Apple ID → iCloud → Access iCloud Data on the Web)
+
+### Adding to Immich
+
+After the initial pull, add the iCloud directory as an external library in Immich:
+
+1. Go to **Administration** → **External Libraries**
+2. Add a new library with import path `/mnt/user/pictures/iCloud`
+3. Immich will scan and deduplicate against photos already synced via the mobile app
+
 ## License
 
 MIT
